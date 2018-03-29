@@ -9,15 +9,15 @@ class Student{
 		$database = new DatabaseConnection();
 	}
 
-	public function add($name,$subject_id)
+	public function add($name,$subject_id,$uploaded_image)
 	{
 		global $pdo;
 
-		$query = "insert into student (name,subject_id) values(?,?)" ;
+		$query = "insert into student (name,subject_id,image) values(?,?,?)" ;
 
 		$result = $pdo->prepare($query);
 
-		$result->execute([$name,$subject_id]);
+		$result->execute([$name,$subject_id,$uploaded_image]);
 
 		return true;
 
@@ -81,17 +81,18 @@ class Student{
 		return $result->fetch();
 	}
 
-	public function update($name,$subject_id,$eid)
+	public function update($name,$subject_id,$uploaded_image,$eid)
 	{
 		global $pdo;
 
 		$query = "update student set name = ?,
-		                             subject_id = ? 
+		                             subject_id = ? ,
+		                             image = ?
 		                             where id = ? " ;
 
 		$result = $pdo->prepare($query);
 
-		$result->execute([$name,$subject_id,$eid]);
+		$result->execute([$name,$subject_id,$uploaded_image,$eid]);
 
 		return true;
 	}

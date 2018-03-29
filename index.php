@@ -31,18 +31,43 @@ $student = new Student();
 						}
 					}
 
+						$permited  = array('jpg', 'jpeg', 'png', 'gif');
+					    $file_name = $_FILES['image']['name'];
+					    // var_dump($file_name);
+					    $file_size = $_FILES['image']['size'];
+					    $file_temp = $_FILES['image']['tmp_name'];
+
+					    $div = explode('.', $file_name);
+					    $file_ext = strtolower(end($div));
+					    $unique_image = substr(md5(time()), 0, 10).'.'.$file_ext;
+					    $uploaded_image = "uploads/".$unique_image;
+
+					    // var_dump( $uploaded_image);
+
+
+
 					// var_dump($subject_id);
 
 					if (empty($name) or empty($subject_id))
 					{
 					echo "<span style='color:red;'>Fill inputs</span>";
 					}
+					elseif (empty($file_name)) {
+						
+						echo "Select an Image";
+					}elseif ($file_size >1048567) {
+						echo "Image Size should be less then 1MB!";
+					} elseif (in_array($file_ext, $permited) === false) {
+						echo "you can upload only:".implode(',',$permited)." Files";
+					}
 					else{
 
-						$result= $student->add($name,$subject_id);
+						move_uploaded_file($file_temp, $uploaded_image);
+
+						$result= $student->add($name,$subject_id,$uploaded_image);
 
 						if ($result) {
-							echo "yes";
+							header("Location:index.php");
 						}
 						else{
 							echo "no";
@@ -80,7 +105,8 @@ $student = new Student();
 			        <th>Serial</th>
 			        <th>Name</th>
 			        <th>Subject</th>
-			        <th>Action</th>
+			        <th>Image</th>
+			        <th width="40%">Action</th>
 			      </tr>
 			    </thead>
 			    <tbody>
@@ -93,8 +119,9 @@ $student = new Student();
 			        <td><?= $id++ ?></td>
 			        <td><?= $row['name']?></td>
 			        <td><?= substr($row['subject_id'],0,-1)?></td>
+			        <td><img src="<?= $row['image']?>" alt="" width="100px" height="80px"></td>
 			        <td>
-			        	<a href="edit.php?eid=<?= $row['id']?>"><button>Edit</button></a> ||
+			        	<a href="edit.php?eid=<?= $row['id']?>"><button style="margin: -2px;">Edit</button></a> ||
 			        	<a href="delete.php?id=<?= $row['id']?>"><button>delete</button></a>
 			        </td>
 			      </tr>

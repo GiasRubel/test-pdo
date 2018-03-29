@@ -44,15 +44,20 @@ $student = new Student();
 						}
 					}
 
+						
 					// var_dump($subject_id);
 
 					if (empty($name) or empty($subject_id))
 					{
 					echo "<span style='color:red;'>Fill inputs</span>";
 					}
+
+					
 					else{
 
-						$result= $student->update($name,$subject_id,$eid);
+						
+
+						$result= $student->update($name,$subject_id,$uploaded_image,$eid);
 
 						if ($result) {
 							header("Location:index.php");
